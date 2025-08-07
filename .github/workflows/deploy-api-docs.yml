@@ -33,8 +33,9 @@ jobs:
 
       - name: Collect OpenAPI schemas
         id: collect
+        working-directory: schema
         run: |
-          ./scripts/collect-schemas.sh
+          ../scripts/collect-schemas.sh
 
   build-docs:
     needs: collect-schemas
@@ -57,8 +58,9 @@ jobs:
         run: npm install -g @redocly/cli@latest
 
       - name: Build documentation for ${{ matrix.schema }}
+        working-directory: schema
         run: |
-          ./scripts/build-single-doc.sh ${{ matrix.schema }} docs
+          ../scripts/build-single-doc.sh ${{ matrix.schema }} ../docs
 
       - name: Upload HTML artifact
         uses: actions/upload-artifact@v4
@@ -89,7 +91,7 @@ jobs:
         run: |
           # Get commit dates for each schema and set as environment variables
           for schema in $(echo '${{ needs.collect-schemas.outputs.schemas }}' | jq -r '.[]'); do
-            commit_date=$(./scripts/get-commit-info.sh "$schema")
+            commit_date=$(cd schema && ../scripts/get-commit-info.sh "$schema")
             echo "COMMIT_DATE_${schema^^}=$commit_date" >> $GITHUB_ENV
             echo "Set COMMIT_DATE_${schema^^}=$commit_date"
           done
