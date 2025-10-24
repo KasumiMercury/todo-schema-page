@@ -65,7 +65,7 @@ jobs:
           ../scripts/build-single-doc.sh ${{ matrix.schema }} ../docs
 
       - name: Upload HTML artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: html-${{ matrix.schema }}
           path: docs/${{ matrix.schema }}.html
@@ -84,7 +84,7 @@ jobs:
           submodules: 'recursive'
 
       - name: Download all HTML artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: html-*
           path: docs
